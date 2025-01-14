@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add sparkle effect on mouse move
     document.addEventListener('mousemove', createSparkle);
     
-    // Start countdown
+    // Start countdown with more frequent updates
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    setInterval(updateCountdown, 1000); // Update every second
 });
 
 function createHeart() {
@@ -113,9 +113,20 @@ function startCelebration() {
 }
 
 function updateCountdown() {
-    const targetDate = new Date('2025-01-15').getTime();
-    const now = new Date().getTime();
-    const difference = targetDate - now;
+    // Get current time in UTC+7
+    const now = new Date();
+    const utc7Offset = 7 * 60; // UTC+7 offset in minutes
+    const localOffset = -now.getTimezoneOffset(); // Local offset in minutes
+    const offsetDiff = utc7Offset - localOffset; // Difference to UTC+7
+    
+    // Adjust current time to UTC+7
+    const nowUtc7 = new Date(now.getTime() + offsetDiff * 60 * 1000);
+    
+    // Set target time to next midnight UTC+7
+    const targetDate = new Date(nowUtc7);
+    targetDate.setHours(24, 0, 0, 0);
+    
+    const difference = targetDate.getTime() - nowUtc7.getTime();
     
     if (difference <= 0) {
         document.getElementById('countdown-timer').innerHTML = `
@@ -130,26 +141,21 @@ function updateCountdown() {
         return;
     }
     
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
     const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
     
     document.getElementById('countdown-timer').innerHTML = `
         <div class="countdown-box">
-            <div class="number">${days}</div>
-            <div class="label">days</div>
-        </div>
-        <div class="countdown-box">
-            <div class="number">${hours}</div>
+            <div class="number">${hours.toString().padStart(2, '0')}</div>
             <div class="label">hours</div>
         </div>
         <div class="countdown-box">
-            <div class="number">${minutes}</div>
+            <div class="number">${minutes.toString().padStart(2, '0')}</div>
             <div class="label">minutes</div>
         </div>
         <div class="countdown-box">
-            <div class="number">${seconds}</div>
+            <div class="number">${seconds.toString().padStart(2, '0')}</div>
             <div class="label">seconds</div>
         </div>
     `;
