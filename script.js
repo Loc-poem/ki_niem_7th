@@ -138,7 +138,7 @@ function updateCountdown() {
     
     document.getElementById('countdown-timer').innerHTML = `
         <div class="countdown-box">
-            <div class="number">${hours.toString().padStart(2, '0')}</div>
+            <div class="number">0</div>
             <div class="label">hours</div>
         </div>
         <div class="countdown-box">
