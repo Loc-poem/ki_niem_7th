@@ -119,7 +119,7 @@ function updateCountdown() {
     const utc7Time = new Date(utcTime + (7 * 3600000)); // UTC+7 in milliseconds
 
     // Get hours, minutes, seconds until midnight
-    const hours = 23 - utc7Time.getHours();
+    const hours = 0;
     const minutes = 59 - utc7Time.getMinutes();
     const seconds = 59 - utc7Time.getSeconds();
     
