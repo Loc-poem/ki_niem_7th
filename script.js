@@ -115,20 +115,15 @@ function startCelebration() {
 function updateCountdown() {
     // Get current time in UTC+7
     const now = new Date();
-    const utc7Offset = 7 * 60; // UTC+7 offset in minutes
-    const localOffset = -now.getTimezoneOffset(); // Local offset in minutes
-    const offsetDiff = utc7Offset - localOffset; // Difference to UTC+7
+    const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const utc7Time = new Date(utcTime + (7 * 3600000)); // UTC+7 in milliseconds
+
+    // Get hours, minutes, seconds until midnight
+    const hours = 23 - utc7Time.getHours();
+    const minutes = 59 - utc7Time.getMinutes();
+    const seconds = 59 - utc7Time.getSeconds();
     
-    // Adjust current time to UTC+7
-    const nowUtc7 = new Date(now.getTime() + offsetDiff * 60 * 1000);
-    
-    // Set target time to next midnight UTC+7
-    const targetDate = new Date(nowUtc7);
-    targetDate.setHours(24, 0, 0, 0);
-    
-    const difference = targetDate.getTime() - nowUtc7.getTime();
-    
-    if (difference <= 0) {
+    if (hours === 0 && minutes === 0 && seconds === 0) {
         document.getElementById('countdown-timer').innerHTML = `
             <div class="countdown-box">
                 <div class="number">Happy Anniversary! 🎉</div>
@@ -140,10 +135,6 @@ function updateCountdown() {
         }
         return;
     }
-    
-    const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
     
     document.getElementById('countdown-timer').innerHTML = `
         <div class="countdown-box">
